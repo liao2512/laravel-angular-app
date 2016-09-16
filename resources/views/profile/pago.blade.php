@@ -7,47 +7,12 @@
             <div class="col-md-12 text-center">
                 <div class="card">
                     <div class="header">
-                        <h3 class="title">Inscripción: {{ $course->name }}</h3>
+                        <h3 class="title">Pago: {{ $registration->course->name }} / {{ $registration->nombres }} {{ $registration->apellidos }}</h3>
                     </div>
                     <div class="content">
-                        <form action="{{ route('inscribir', $course) }}" method="POST">
+                        <form action="{{ route('pagar', $registration) }}" method="POST">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="nombres-field">Nombres</label>
-                                        <input type="text" id="nombres-field" name="nombres" class="form-control" value="{{ old("nombres") }}" required/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="apellidos-field">Apellidos</label>
-                                        <input type="text" id="apellidos-field" name="apellidos" class="form-control" value="{{ old("apellidos") }}" required/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="apellidos-field">Fecha de Nacimiento</label>
-                                        <input type="date" id="nacimiento-field" name="nacimiento" class="form-control" value="{{ old("nacimiento") }}" required/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="phone-field">Teléfono Celular</label>
-                                        <input type="text" id="phone-field" name="phone" class="form-control" value="{{ old("phone") }}" required/>
-                                    </div>
-                                </div>
-                            </div>
                             
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="comentarios-field">¿Asiste su hijo/a a consulta? Si sí, explique</label>
-                                        <textarea rows="2" id="consulta-field" name="consulta" class="form-control">{{ old("consulta") }}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -83,8 +48,8 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <button type="submit" class="btn btn-lg btn-info btn-fill">REGISTRAR INSCRIPCIÓN</button>
+                            
+                            <button type="submit" class="btn btn-lg btn-info btn-fill">REPORTAR PAGO</button>
                             <div class="clearfix"></div>
                         </form>
                     </div>

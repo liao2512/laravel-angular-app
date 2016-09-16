@@ -8,6 +8,11 @@ use App\Course;
 use Illuminate\Http\Request;
 
 class RegistrationController extends Controller {
+	
+	public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
 	public function index($course)
 	{
@@ -20,7 +25,7 @@ class RegistrationController extends Controller {
 	public function api($course) {
  
 		$course = Course::findOrFail($course);
-		$registrations = $course->registrations()->with('payments')->get();
+		$registrations = $course->registrations()->with('payments')->with('user')->get();
 		return $registrations;
 	}
 
@@ -68,7 +73,7 @@ class RegistrationController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit($course, $id)
 	{
 		$registration = Registration::findOrFail($id);
 
@@ -82,36 +87,39 @@ class RegistrationController extends Controller {
 	 * @param Request $request
 	 * @return Response
 	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, $course, $id)
 	{
 		$registration = Registration::findOrFail($id);
 
 		$registration->nombres = $request->input("nombres");
         $registration->apellidos = $request->input("apellidos");
         $registration->phone = $request->input("phone");
-        $registration->fecha = $request->input("fecha");
-        $registration->banco = $request->input("banco");
-        $registration->referencia = $request->input("referencia");
-        $registration->monto = $request->input("monto");
-        $registration->comentarios = $request->input("comentarios");
+        $registration->nacimiento = $request->input("nacimiento");
+        $registration->consulta = $request->input("consulta");
+        
+		$registration->save();
+
+		return redirect()->route('courses.registrations.index', $course)->with('message', 'Inscripción editada exitosamente.');
+	}
+
+	public function status($id)
+	{
+		$registration = Registration::findOrFail($id);
+		
+		if ($registration->status) {
+		    $registration->status = 0;
+		} else {
+		    $registration->status = 1;
+		}
 
 		$registration->save();
 
-		return redirect()->route('registrations.index')->with('message', 'Item updated successfully.');
 	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+	
 	public function destroy($id)
 	{
 		$registration = Registration::findOrFail($id);
 		$registration->delete();
-
-		return redirect()->route('registrations.index')->with('message', 'Item deleted successfully.');
 	}
 
 }

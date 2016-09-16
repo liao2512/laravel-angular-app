@@ -1,83 +1,67 @@
-@extends('layout')
-
-@section('header')
-    <div class="page-header">
-        <h1><i class="glyphicon glyphicon-edit"></i> Registrations / Edit #{{$registration->id}}</h1>
-    </div>
-@endsection
+@extends('layouts.back')
 
 @section('content')
     @include('error')
-
-    <div class="row">
-        <div class="col-md-12">
-
-            <form action="{{ route('registrations.update', $registration->id) }}" method="POST">
-                <input type="hidden" name="_method" value="PUT">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                <div class="form-group @if($errors->has('nombres')) has-error @endif">
-                       <label for="nombres-field">Nombres</label>
-                    <input type="text" id="nombres-field" name="nombres" class="form-control" value="{{ $registration->nombres }}"/>
-                       @if($errors->has("nombres"))
-                        <span class="help-block">{{ $errors->first("nombres") }}</span>
-                       @endif
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="header">
+                            <div class="col-sm-8">
+                                <h4 class="title"><i class="fa fa-edit" aria-hidden="true"></i> Editar Inscripción</h4>
+                            </div>
+                            <div class="col-sm-4">
+                                <a class="btn btn-info btn-fill pull-right" href="{{ route('courses.registrations.index', [$registration->course]) }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Regresar</a>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="content">
+                            <form action="{{ route('courses.registrations.update', [$registration->course, $registration->id]) }}" method="POST">
+                                <input type="hidden" name="_method" value="PUT">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="nombres-field">Nombres</label>
+                                            <input type="text" id="nombres-field" name="nombres" class="form-control" value="{{ $registration->nombres }}" required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="apellidos-field">Apellidos</label>
+                                            <input type="text" id="apellidos-field" name="apellidos" class="form-control" value="{{ $registration->apellidos }}" required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="apellidos-field">Fecha de Nacimiento</label>
+                                            <input type="date" id="nacimiento-field" name="nacimiento" class="form-control" value="{{ $registration->nacimiento }}" required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="phone-field">Teléfono Celular</label>
+                                            <input type="text" id="phone-field" name="phone" class="form-control" value="{{ $registration->phone }}" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="comentarios-field">¿Asiste su hijo/a a consulta? Si sí, explique</label>
+                                        <textarea rows="2" id="consulta-field" name="consulta" class="form-control">{{ $registration->consulta }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                                <button type="submit" class="btn btn-info btn-fill btn-block">Guardar Cambios</button>    
+                                <div class="clearfix"></div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="form-group @if($errors->has('apellidos')) has-error @endif">
-                       <label for="apellidos-field">Apellidos</label>
-                    <input type="text" id="apellidos-field" name="apellidos" class="form-control" value="{{ $registration->apellidos }}"/>
-                       @if($errors->has("apellidos"))
-                        <span class="help-block">{{ $errors->first("apellidos") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group @if($errors->has('phone')) has-error @endif">
-                       <label for="phone-field">Phone</label>
-                    <input type="text" id="phone-field" name="phone" class="form-control" value="{{ $registration->phone }}"/>
-                       @if($errors->has("phone"))
-                        <span class="help-block">{{ $errors->first("phone") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group @if($errors->has('fecha')) has-error @endif">
-                       <label for="fecha-field">Fecha</label>
-                    <input type="text" id="fecha-field" name="fecha" class="form-control" value="{{ $registration->fecha }}"/>
-                       @if($errors->has("fecha"))
-                        <span class="help-block">{{ $errors->first("fecha") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group @if($errors->has('banco')) has-error @endif">
-                       <label for="banco-field">Banco</label>
-                    <input type="text" id="banco-field" name="banco" class="form-control" value="{{ $registration->banco }}"/>
-                       @if($errors->has("banco"))
-                        <span class="help-block">{{ $errors->first("banco") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group @if($errors->has('referencia')) has-error @endif">
-                       <label for="referencia-field">Referencia</label>
-                    <input type="text" id="referencia-field" name="referencia" class="form-control" value="{{ $registration->referencia }}"/>
-                       @if($errors->has("referencia"))
-                        <span class="help-block">{{ $errors->first("referencia") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group @if($errors->has('monto')) has-error @endif">
-                       <label for="monto-field">Monto</label>
-                    <input type="text" id="monto-field" name="monto" class="form-control" value="{{ $registration->monto }}"/>
-                       @if($errors->has("monto"))
-                        <span class="help-block">{{ $errors->first("monto") }}</span>
-                       @endif
-                    </div>
-                    <div class="form-group @if($errors->has('comentarios')) has-error @endif">
-                       <label for="comentarios-field">Comentarios</label>
-                    <textarea class="form-control" id="comentarios-field" rows="3" name="comentarios">{{ $registration->comentarios }}</textarea>
-                       @if($errors->has("comentarios"))
-                        <span class="help-block">{{ $errors->first("comentarios") }}</span>
-                       @endif
-                    </div>
-                <div class="well well-sm">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a class="btn btn-link pull-right" href="{{ route('registrations.index') }}"><i class="glyphicon glyphicon-backward"></i>  Back</a>
                 </div>
-            </form>
 
+            </div>
         </div>
     </div>
 @endsection

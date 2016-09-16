@@ -36,7 +36,7 @@
                                     <tr ng-repeat="category in categories | filter:searchTerm | orderBy:'position'">
                                         <td><% category.position %></td>
                                         <td>
-                                            <a class="btn btn-sm btn-success btn-fill" ng-class="{true: 'btn-warning', false: 'btn-success'}[!category.status]" ng-click="updateStatus(category); category.status = !category.status"><% category.name %></a>
+                                            <a ng-class="category.status == '1' ? 'btn btn-sm btn-fill btn-success' : 'btn btn-sm btn-fill btn-warning'" ng-click="updateStatus(category); (category.status == '1' ? category.status = '0' : category.status = '1')"><% category.name %></a>
                                         </td>
                                         <td>
                                             <a class="btn btn-sm btn-primary btn-fill" ng-href="/categories/<% category.id %>/courses"><% category.courses.length %></a>

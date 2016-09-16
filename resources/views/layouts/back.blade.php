@@ -45,7 +45,7 @@ Tip 2: you can also add an image using data-image tag
 
                 <div class="sidebar-wrapper">
                     <div class="logo">
-                        <a href="#" class="simple-text">
+                        <a href="http://kidplus.admi.com.ve/" class="simple-text">
                             Admi
                         </a>
                     </div>
@@ -58,28 +58,22 @@ Tip 2: you can also add an image using data-image tag
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{ route('pagos') }}">
                                 <i class="pe-7s-piggy"></i>
                                 <p>Pagos</p>
                             </a>
                         </li>
                     @else
                         <li>
-                            <a href="{{ route('categories.index') }}">
+                            <a href="{{ route('home') }}">
                                 <i class="pe-7s-menu"></i>
                                 <p>Ver Cursos</p>
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{ route('misinscripciones') }}">
                                 <i class="pe-7s-check"></i>
-                                <p>Mis Inscripciones</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="pe-7s-piggy"></i>
-                                <p>Pagar</p>
+                                <p>Inscripciones y Pagos</p>
                             </a>
                         </li>
                     @endif

@@ -15,7 +15,7 @@ return [
 
     'password' => 'La clave debe tener al menos 6 caracteres y coincidir con la confirmación.',
     'reset' => '¡Tu clave ha sido reseteada!',
-    'sent' => '¡Hemos enviado un link de reseteo de clave a tu email!',
+    'sent' => '¡Hemos enviado un link de reseteo de clave a tu email! Recuerda revisar en Correos No Deseados (Spam)',
     'token' => 'Token de reseteo de clave inválido.',
     'user' => "No existe un usuario con ese email.",
 

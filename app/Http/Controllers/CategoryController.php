@@ -2,6 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Response;
 
 use App\Category;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class CategoryController extends Controller {
 	public function api() {
  
 		$categories = Category::with('courses')->get();
-		return $categories;
+		return Response::json($categories, 200, [], JSON_NUMERIC_CHECK);
 	}
  
 	public function create()
@@ -107,7 +108,6 @@ class CategoryController extends Controller {
 		}
 
 		$category->save();
-
 	}
 	
 	public function destroy($id)
@@ -122,8 +122,6 @@ class CategoryController extends Controller {
 		    --$moved_category->position;
 		    $moved_category->save();
 		}
-
-		return redirect()->route('categories.index')->with('message', 'Categoría eliminada.');
 	}
 
 }

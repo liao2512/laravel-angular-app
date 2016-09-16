@@ -17,7 +17,10 @@ class CreatePaymentsTable extends Migration {
             $table->date('fecha');
             $table->string('banco');
             $table->string('referencia');
-            $table->string('monto');
+            $table->decimal('monto', 7, 2);
+            $table->string('concepto');
+            $table->string('titular');
+            $table->string('cedula');
             $table->text('comentarios');
             $table->boolean('status')->default(0);
             $table->integer('registration_id')->index();

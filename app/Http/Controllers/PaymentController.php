@@ -4,27 +4,41 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Payment;
+use App\Registration;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$payments = Payment::orderBy('id', 'desc')->paginate(10);
+	public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-		return view('payments.index', compact('payments'));
+	public function index($registration)
+	{
+		$registration = Registration::findOrFail($registration);
+		$payments = $registration->payments()->orderBy('fecha', 'desc');
+
+		return view('payments.index', compact('payments', 'registration'));
+	}
+	
+	public function pagos()
+	{
+		return view('payments.index');
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
+	public function api($registration) {
+		
+		if ($registration == 0) {
+		    $payments = Payment::where('status', 0)->with('registration')->get();
+		} else {
+		    $registration = Registration::findOrFail($registration);
+			$payments = $registration->payments()->get();
+		}
+		return $payments;
+		
+	}
+	
 	public function create()
 	{
 		return view('payments.create');
@@ -93,18 +107,24 @@ class PaymentController extends Controller {
 		return redirect()->route('payments.index')->with('message', 'Item updated successfully.');
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+	public function status($id)
+	{
+		$payment = Payment::findOrFail($id);
+		
+		if ($payment->status) {
+		    $payment->status = 0;
+		} else {
+		    $payment->status = 1;
+		}
+
+		$payment->save();
+
+	}
+	
 	public function destroy($id)
 	{
 		$payment = Payment::findOrFail($id);
 		$payment->delete();
-
-		return redirect()->route('payments.index')->with('message', 'Item deleted successfully.');
 	}
 
 }

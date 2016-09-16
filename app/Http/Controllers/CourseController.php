@@ -2,6 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Response;
 
 use App\Course;
 use App\Category;
@@ -26,7 +27,7 @@ class CourseController extends Controller {
  
 		$category = Category::findOrFail($category);
 		$courses = $category->courses()->with('registrations')->get();
-		return $courses;
+		return Response::json($courses, 200, [], JSON_NUMERIC_CHECK);
 	}
 	
 	public function create($categories)
@@ -52,6 +53,14 @@ class CourseController extends Controller {
         $course->position = $request->input("position");
         $course->category_id = $category;
         $course->status = $request->input("status");
+        
+        $courses = Course::where('position', '>=', $course->position)->get();
+        
+        foreach ($courses as $moved_course)
+		{
+		    ++$moved_course->position;
+		    $moved_course->save();
+		}
 
 		$course->save();
 
@@ -80,8 +89,9 @@ class CourseController extends Controller {
 	public function edit($category, $id)
 	{
 		$course = Course::findOrFail($id);
+		$courses = Course::all()->count() + 1;
 
-		return view('courses.edit', compact('course'));
+		return view('courses.edit', compact('course', 'courses'));
 	}
 
 	/**
@@ -94,6 +104,22 @@ class CourseController extends Controller {
 	public function update(Request $request, $category, $id)
 	{
 		$course = Course::findOrFail($id);
+		
+		if ($course->position > $request->input("position")) {
+			$courses = Course::whereBetween('position', [$request->input("position"), $course->position])->get();
+		    foreach ($courses as $moved_course)
+			{
+			    ++$moved_course->position;
+			    $moved_course->save();
+			}
+		} elseif ($course->position < $request->input("position")){
+		    $courses = Course::whereBetween('position', [$course->position, $request->input("position")])->get();
+		    foreach ($courses as $moved_course)
+			{
+			    --$moved_course->position;
+			    $moved_course->save();
+			}
+		}
 
 		$course->name = $request->input("name");
         $course->description = $request->input("description");
@@ -120,12 +146,18 @@ class CourseController extends Controller {
 
 	}
 	
-	public function destroy($category, $id)
+	public function destroy($id)
 	{
 		$course = Course::findOrFail($id);
 		$course->delete();
-
-		return redirect()->route('categories.courses.index', $category)->with('message', 'Curso eliminado.');
+		
+		$courses = Course::where('position', '>=', $course->position)->get();
+        
+        foreach ($courses as $moved_course)
+		{
+		    --$moved_course->position;
+		    $moved_course->save();
+		}
 	}
 
 }

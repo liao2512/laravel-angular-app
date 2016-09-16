@@ -12,12 +12,12 @@
                                 <h4 class="title"><i class="fa fa-plus" aria-hidden="true"></i> Nuevo Curso {{ $category->name }}</h4>
                             </div>
                             <div class="col-sm-4">
-                                <a class="btn btn-info btn-fill pull-right" href="{{ route('categories.index') }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Regresar</a>
+                                <a class="btn btn-info btn-fill pull-right" href="{{ route('categories.courses.index', [$category]) }}"><i class="fa fa-arrow-left" aria-hidden="true"></i> Regresar</a>
                             </div>
                         </div>
                         <br><br>
                         <div class="content">
-                             <form action="{{ route('categories.courses.store', $category) }}" method="POST">
+                            <form action="{{ route('categories.courses.store', $category) }}" method="POST">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <div class="row">
                                     <div class="col-md-2">
@@ -44,9 +44,6 @@
                                         <div class="form-group">
                                             <label for="places-field">Cupos</label>
                                             <input type="number" id="places-field" name="places" class="form-control" value="{{ old("places") }}" required/>
-                                                @if($errors->has("places"))
-                                                    <span class="help-block">{{ $errors->first("places") }}</span>
-                                                @endif
                                         </div>
                                     </div>
                                     <div class="col-md-2">

@@ -17,10 +17,8 @@ class CreateRegistrationsTable extends Migration {
             $table->string('nombres');
             $table->string('apellidos');
             $table->string('phone');
-            $table->date('fecha');
-            $table->string('banco');
-            $table->string('referencia');
-            $table->string('monto');
+            $table->date('nacimiento');
+            $table->string('consulta');
             $table->text('comentarios');
             $table->boolean('status')->default(0);
             $table->integer('course_id')->index();

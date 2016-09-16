@@ -30,7 +30,7 @@ CREATE TABLE `categories` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,6 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Chino',2,1,'2016-06-21 15:00:29','2016-06-21 16:15:33'),(2,'Ruso',1,0,'2016-06-21 15:00:41','2016-06-21 16:06:17');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,7 +61,7 @@ CREATE TABLE `courses` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `courses_category_id_index` (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +70,6 @@ CREATE TABLE `courses` (
 
 LOCK TABLES `courses` WRITE;
 /*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-INSERT INTO `courses` VALUES (4,'Frances 3pm','asadasd',6,1,1,1,'2016-06-16 19:56:27','2016-06-16 20:21:52'),(5,'Ruso 3pm','io',2,2,1,2,'2016-06-21 15:01:03','2016-06-21 15:01:03'),(6,'Ruso 6pm','hu',7,2,0,2,'2016-06-21 15:13:38','2016-06-21 15:13:38');
 /*!40000 ALTER TABLE `courses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +92,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES ('2014_10_12_000000_create_users_table',1),('2014_10_12_100000_create_password_resets_table',1),('2016_06_01_200402_create_categories_table',1),('2016_06_01_203801_create_courses_table',1),('2016_06_16_210557_create_registrations_table',2);
+INSERT INTO `migrations` VALUES ('2014_10_12_000000_create_users_table',1),('2014_10_12_100000_create_password_resets_table',1),('2016_06_01_200402_create_categories_table',1),('2016_06_01_203801_create_courses_table',1),('2016_06_16_210557_create_registrations_table',1),('2016_07_07_152911_create_payments_table',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,6 +122,41 @@ LOCK TABLES `password_resets` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `payments`
+--
+
+DROP TABLE IF EXISTS `payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `payments` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  `banco` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `referencia` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `monto` decimal(7,2) NOT NULL,
+  `concepto` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `titular` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `cedula` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `comentarios` text COLLATE utf8_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `registration_id` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `payments_registration_id_index` (`registration_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payments`
+--
+
+LOCK TABLES `payments` WRITE;
+/*!40000 ALTER TABLE `payments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `registrations`
 --
 
@@ -135,17 +168,18 @@ CREATE TABLE `registrations` (
   `nombres` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `apellidos` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `fecha` date NOT NULL,
-  `banco` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `referencia` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `monto` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `nacimiento` date NOT NULL,
+  `consulta` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `comentarios` text COLLATE utf8_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `course_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `registrations_course_id_index` (`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `registrations_course_id_index` (`course_id`),
+  KEY `registrations_user_id_index` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +188,6 @@ CREATE TABLE `registrations` (
 
 LOCK TABLES `registrations` WRITE;
 /*!40000 ALTER TABLE `registrations` DISABLE KEYS */;
-INSERT INTO `registrations` VALUES (1,'Luis','Abad','+584120755801','0000-00-00','oiu','oiu','oiu','asdads',4,'2016-06-16 22:29:17','2016-06-16 22:29:17'),(2,'Luis','Abad','+584120755801','0000-00-00','oiu','oiu','oiu','asdasd',4,'2016-06-16 23:05:07','2016-06-16 23:05:07');
 /*!40000 ALTER TABLE `registrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,12 +203,13 @@ CREATE TABLE `users` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `admin` tinyint(1) NOT NULL DEFAULT '0',
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +218,6 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Nacho','liao2512@gmail.com','$2y$10$kIHgHTzne3FMpkb5vAGgNu4yjSKwIAQ1mn/XzK.nxHKv7WDmZdMUq','RWIW0k180GZixft3vVrUdbP5ZUuYdkmTXUVFDc9X8IEU9ODxiWwfX1YMoPYv','2016-06-16 18:18:35','2016-06-20 21:23:30');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -197,4 +230,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-21 16:22:14
+-- Dump completed on 2016-08-23 15:25:15

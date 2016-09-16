@@ -1,54 +1,64 @@
-@extends('layout')
+@extends('layouts.back')
 
-@section('header')
-    <div class="page-header clearfix">
-        <h1>
-            <i class="glyphicon glyphicon-align-justify"></i> Payments
-            <a class="btn btn-success pull-right" href="{{ route('payments.create') }}"><i class="glyphicon glyphicon-plus"></i> Create</a>
-        </h1>
-
-    </div>
-@endsection
+<script type="text/javascript">
+    var paymentsRegistration = {{ isset($registration) ? $registration->id : 0 }};
+</script>
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            @if($payments->count())
-                <table class="table table-condensed table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>TITLE</th>
-                        <th>BODY</th>
-                            <th class="text-right">OPTIONS</th>
-                        </tr>
-                    </thead>
+<div class="content" ng-app="admiApp" ng-controller="paymentsController">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @if(Session::has('message'))
+                    <div class="alert alert-success text-center">
+                        <span>{{ Session::get('message') }}</span>
+                    </div>
+                @endif
+                <div class="card">
+                    <div class="header">
+                        <div class="col-sm-6">
+                            
 
-                    <tbody>
-                        @foreach($payments as $payment)
-                            <tr>
-                                <td>{{$payment->id}}</td>
-                                <td>{{$payment->title}}</td>
-                    <td>{{$payment->body}}</td>
-                                <td class="text-right">
-                                    <a class="btn btn-xs btn-primary" href="{{ route('payments.show', $payment->id) }}"><i class="glyphicon glyphicon-eye-open"></i> View</a>
-                                    <a class="btn btn-xs btn-warning" href="{{ route('payments.edit', $payment->id) }}"><i class="glyphicon glyphicon-edit"></i> Edit</a>
-                                    <form action="{{ route('payments.destroy', $payment->id) }}" method="POST" style="display: inline;" onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-                {!! $payments->render() !!}
-            @else
-                <h3 class="text-center alert alert-info">Empty!</h3>
-            @endif
-
+                            <h4 class="title">Pagos  {{ isset($registration) ? $registration->nombres : 'Por Confirmar' }} <i ng-show="loading" class="fa fa-spinner fa-spin"></i></h4>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" data-ng-model="searchTerm" class="form-control pull-right" placeholder="Buscar">
+                        </div>
+                    </div>
+                    <br><br><br>
+                    <div ng-if="payments.length > 0">
+                        <div class="content table-responsive table-full-width">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <th>Fecha</th>
+                                    <th>Referencia: Monto</th>
+                                    <th>Cedula</th>
+                                    <th>Banco</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="pay in payments | filter:searchTerm | orderBy:'-fecha'">
+                                        <td><% pay.fecha %></td>
+                                        <td>
+                                            <a ng-class="pay.status == '1' ? 'btn btn-sm btn-fill btn-success' : 'btn btn-sm btn-fill btn-warning'" ng-click="updateStatus(pay); (pay.status == '1' ? pay.status = '0' : pay.status = '1')"><% pay.referencia %>: Bs <% pay.monto %></a>
+                                        </td>
+                                        <td><% pay.cedula %></td>
+                                        <td><% pay.banco %></td>
+                                        <td>
+                                            <a class="btn btn-sm btn-info btn-fill" ng-href="/categories/<% category.id %>/courses/<% course.id %>/edit"><i class="fa fa-edit" aria-hidden="true"></i> Editar</a>
+                                            <a class="btn btn-sm btn-danger btn-fill" onclick="if(confirm('¿Eliminar todos los datos asociados a esta Inscripción? ¿Estás seguro?')) { return true } else {return false };" ng-click="deletePayment(pay)"><i class="fa fa-trash" aria-hidden="true"></i> Eliminar</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div ng-if="payments.length == 0">
+                        <h3 class="text-center alert alert-info">Aún no hay pagos reportados</h3>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
+</div>
 @endsection
